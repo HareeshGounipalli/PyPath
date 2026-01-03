@@ -37,6 +37,45 @@ def login(user: schemas.UserLogin, db: Session = Depends(database.get_db)):  # F
     access_token = auth.create_access_token({"sub": str(db_user.id)})  # Fix: db_user.id
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.get("/me", response_model=schemas.UserOut)
-def get_me(current_user = Depends(auth.get_current_user)):
+@router.put("/me", response_model=schemas.UserOut)
+def update_profile(
+    updated_user: schemas.UserBase,
+    current_user=Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    # Check if email is already used by someone else
+    existing_user = crud.get_user_by_email(db, updated_user.email)
+    if existing_user and existing_user.id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+
+    # Update fields
+    current_user.name = updated_user.name
+    current_user.email = updated_user.email
+
+    db.add(current_user)
+    db.commit()
+    db.refresh(current_user)
     return current_user
+
+
+@router.put("/change-password")
+def change_password(
+    passwords: schemas.ChangePassword,
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(database.get_db)
+):
+    # Verify current password
+    if not auth.verify_password(passwords.current_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Current password is incorrect"
+        )
+    
+    # Hash new password
+    current_user.hashed_password = auth.get_password_hash(passwords.new_password)
+    db.add(current_user)
+    db.commit()
+    return {"message": "Password updated successfully"}

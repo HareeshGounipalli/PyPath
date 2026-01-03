@@ -33,3 +33,14 @@ class UserOut(UserBase):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+class ChangePassword(BaseModel):
+    current_password: str
+    new_password: str
+
+    @field_validator('new_password')
+    @classmethod
+    def check_new_password_bytes(cls, v):
+        if len(v.encode('utf-8')) > 72:
+            raise ValueError('Password exceeds 72 bytes')
+        return v
