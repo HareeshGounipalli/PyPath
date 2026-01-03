@@ -72,8 +72,15 @@ def authenticate_user(db: Session, email: str, password: str):
 # =========================
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)):
     payload = verify_token(token)
-    user_id = payload.get("sub")
-    user = db.query(models.User).filter(models.User.id == user_id).first()
+    user_id_str = payload.get("sub")
+    if not user_id_str:
+        raise credentials_exception()
+    try:
+        user_id = int(user_id_str)
+    except ValueError:
+        raise credentials_exception()
+    
+    user = db.query(models.User).filter(models.User.id == user_id).first()  # Now db available
     if not user:
         raise credentials_exception()
     return user
