@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+env/
+venv/
+ENV/
+build/
+dist/
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# Database / SQLite
+*.sqlite3
+*.db
+
+# Pytest / coverage
+.coverage
+htmlcov/
+.tox/
+
+# FastAPI / general
+*.egg-info/
