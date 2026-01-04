@@ -7,6 +7,7 @@ import Tutorials from "./pages/Tutorials";
 import TutorialDetail from "./pages/TutorialDetail";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Auth from "./pages/Auth";
 
 export default function App() {
   const location = useLocation();
@@ -50,6 +51,8 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/auth" element={<Auth />} />
+
       </Routes>
           </div>
         </CSSTransition>

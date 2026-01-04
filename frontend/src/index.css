@@ -233,3 +233,70 @@ li {
 .login-container button:hover {
   background: #21a1f1;
 }
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #020617);
+}
+
+.auth-card {
+  width: 360px;
+  padding: 2rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
+.auth-card h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.auth-tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.auth-tabs button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  color: #cbd5f5;
+  cursor: pointer;
+}
+
+.auth-tabs .active {
+  border-bottom: 2px solid #38bdf8;
+  color: white;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 0.8rem;
+  border-radius: 6px;
+  border: none;
+}
+
+.auth-card button[type="submit"] {
+  width: 100%;
+  padding: 0.6rem;
+  background: #38bdf8;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.error {
+  color: #f87171;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
