@@ -1,26 +1,25 @@
-# app/schemas.py
-from pydantic import BaseModel, EmailStr, constr, field_validator  # Complete V2 import
-from typing import Optional
+from pydantic import BaseModel, EmailStr, field_validator
+from typing import Optional, List
 from datetime import datetime
 
+# -------------------- Users --------------------
 class UserBase(BaseModel):
     name: str
     email: EmailStr
 
-# max_length=72 to prevent bcrypt error
 class UserCreate(UserBase):
     password: str
-    
-    @field_validator('password')
+
+    @field_validator("password")
     @classmethod
-    def check_password_bytes(cls, v):
-        if len(v.encode('utf-8')) > 72:
-            raise ValueError('Password exceeds 72 bytes')
+    def check_password_length(cls, v):
+        if len(v.encode()) > 72:
+            raise ValueError("Password exceeds 72 bytes")
         return v
 
 class UserLogin(BaseModel):
     email: EmailStr
-    password: constr(max_length=100)
+    password: str
 
 class UserOut(UserBase):
     id: int
@@ -30,6 +29,7 @@ class UserOut(UserBase):
     class Config:
         from_attributes = True
 
+# -------------------- Auth --------------------
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -38,24 +38,31 @@ class ChangePassword(BaseModel):
     current_password: str
     new_password: str
 
-    @field_validator('new_password')
-    @classmethod
-    def check_new_password_bytes(cls, v):
-        if len(v.encode('utf-8')) > 72:
-            raise ValueError('Password exceeds 72 bytes')
-        return v
+# -------------------- Lessons --------------------
+class LessonBase(BaseModel):
+    title: str
+    content: str
 
+class LessonOut(LessonBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# -------------------- Tutorials --------------------
 class TutorialBase(BaseModel):
     title: str
     description: Optional[str] = None
-    content: Optional[str] = None
+    category: Optional[str] = None
 
 class TutorialCreate(TutorialBase):
-    pass
+    lessons: Optional[List[LessonBase]] = []
 
 class TutorialOut(TutorialBase):
     id: int
     created_at: datetime
+    lessons: List[LessonOut] = []
 
     class Config:
         from_attributes = True
