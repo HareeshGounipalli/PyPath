@@ -9,6 +9,7 @@ import TutorialDetail from  "./pages/TutorialDetail";
 import Auth from "./pages/Auth"; // login/register page
 import './index.css';
 import './App.css';
+import CodeEditor from "./pages/Editor";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -38,6 +39,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <TutorialDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/editor"
+          element={
+            <ProtectedRoute>
+              <CodeEditor />
             </ProtectedRoute>
           }
         />

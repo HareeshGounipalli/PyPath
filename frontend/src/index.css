@@ -14,9 +14,8 @@ body {
   margin: 0;
   font-family: system-ui, sans-serif;
   background: linear-gradient(135deg, #0f172a, #020617);
-  color: #fff;
+  color: var(--text-color);
   min-height: 100vh;
-  /* REMOVE flex centering for desktop */
   display: block;
   padding: 0;
   overflow-x: hidden;
@@ -24,11 +23,10 @@ body {
 
 .app-container {
   max-width: 1280px;
-  margin: 0 auto; /* center the content horizontally */
+  margin: 0 auto; /* center horizontally */
   padding: 2rem;
-  text-align: left; /* align content to left like a real webapp */
+  text-align: left; /* align like webapp */
 }
-
 
 /* Floating background */
 body::before {
@@ -58,3 +56,11 @@ body::before {
 .page-enter-active { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease, transform 0.4s ease; }
 .page-exit { opacity: 1; transform: translateY(0); }
 .page-exit-active { opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+
+/* ================= Responsive Utilities ================= */
+@media (max-width: 768px) {
+  .app-container {
+    width: 95%;
+    padding: 1rem;
+  }
+}
