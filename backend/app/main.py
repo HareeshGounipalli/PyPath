@@ -1,18 +1,18 @@
 # app/main.py
 from fastapi import FastAPI
 from .database import engine, Base
-from .routers import auth_routes  # add routers
+from .routers import auth_routes  # only import auth
 
 # Import models to ensure tables are created
 from . import models
 
 app = FastAPI(title="PyPath Backend")
 
-# Create tables
+# Create tables in the database
 Base.metadata.create_all(bind=engine)
 
-# Include auth routes
-app.include_router(auth_routes.router)
+# Include routers
+app.include_router(auth_routes.router)  # only auth
 
 @app.get("/")
 def read_root():

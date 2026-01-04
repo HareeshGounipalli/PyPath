@@ -44,3 +44,18 @@ class ChangePassword(BaseModel):
         if len(v.encode('utf-8')) > 72:
             raise ValueError('Password exceeds 72 bytes')
         return v
+
+class TutorialBase(BaseModel):
+    title: str
+    description: Optional[str] = None
+    content: Optional[str] = None
+
+class TutorialCreate(TutorialBase):
+    pass
+
+class TutorialOut(TutorialBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

@@ -1,8 +1,9 @@
 # app/models.py
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Enum, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base
+from sqlalchemy.sql import func
 
 # -------------------- Users Table --------------------
 class User(Base):
@@ -113,3 +114,12 @@ class AuditLog(Base):
 
     # Relationships
     user = relationship("User", back_populates="audit_logs")
+
+class Tutorial(Base):
+    __tablename__ = "tutorials"
+    __table_args__ = {"extend_existing": True}  # <-- Add this line
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(255), nullable=False)
+    description = Column(Text)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
