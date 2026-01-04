@@ -1,29 +1,54 @@
-.editor-container {
+.editor-wrapper {
   display: flex;
   gap: 1rem;
-  /* flex-wrap removed to keep side by side */
-}
-
-/* Editor gets more width */
-.editor-section {
-  flex: 2; /* takes 2 parts */
-  min-width: 300px;
-}
-
-/* Console gets less width */
-.console-section {
-  flex: 1; /* takes 1 part */
-  min-width: 200px;
-  background: rgba(30, 30, 30, 0.85);
-  border-radius: 12px;
-  padding: 1rem;
-  min-height: 350px;
-  overflow-y: auto;
-}
-
-.editor-section textarea {
   width: 100%;
-  min-height: 350px;
+  min-height: 500px;
+}
+
+/* FileTree Panel */
+.editor-wrapper > div:first-child {
+  flex: 1; /* file tree smaller width */
+  max-width: 220px;
+  background: rgba(30, 30, 30, 0.85);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+/* FileTree active file highlight */
+.file-item {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #cbd5f5;
+}
+
+.file-item:hover {
+  background: rgba(50, 50, 50, 0.6);
+}
+
+.file-item.active {
+  background: #61dafb;
+  color: #000;
+  font-weight: bold;
+}
+
+/* Editor + Console container */
+.editor-console {
+  flex: 5; /* increased width for editor + console */
+  display: flex;
+  gap: 1rem;
+}
+
+/* Editor Section */
+.editor-card {
+  flex: 4; /* editor wider */
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-textarea {
+  width: 100%;
+  height: 100%;
   font-family: monospace;
   font-size: 1rem;
   border-radius: 8px;
@@ -31,10 +56,11 @@
   background: rgba(20, 20, 20, 0.9);
   color: #61dafb;
   border: none;
-  resize: vertical;
+  resize: none;
+  flex: 1; /* fill height */
 }
 
-.editor-section button {
+.run-button {
   margin-top: 1rem;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
@@ -42,28 +68,86 @@
   color: #000;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  align-self: flex-end;
 }
 
-.editor-section button:hover {
+.run-button:hover {
   background: #21a1f1;
 }
 
-.console-section pre {
+/* Console Section */
+.console-card {
+  flex: 1.5; /* reduced width for console */
+  padding-left: 1rem;
+  max-height: 100%;
+  overflow-y: auto;
+  background: rgba(30, 30, 30, 0.85);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.console-output,
+.console-error {
   white-space: pre-wrap;
-  word-wrap: break-word;
 }
 
-.console-section h3 {
-  margin-top: 0;
+.console-error {
+  color: #f87171;
 }
 
-@media (max-width: 768px) {
-  .editor-container {
-    flex-direction: column;
-  }
-  .editor-section,
-  .console-section {
-    flex: 1 1 100%;
-  }
+
+/* //// */
+
+/* FileTree Panel */
+.file-tree {
+  flex: 1;
+  max-width: 220px;
+  background: rgba(30, 30, 30, 0.85);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+/* New File Button */
+.file-tree button {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  background-color: #61dafb;
+  color: #000;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.file-tree button:hover {
+  background-color: #21a1f1;
+}
+
+/* File list items */
+.file-tree ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-tree li {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #cbd5f5;
+  transition: background 0.2s, color 0.2s;
+}
+
+.file-tree li:hover {
+  background: rgba(50, 50, 50, 0.6);
+}
+
+/* Active / selected file */
+.file-tree li.active-file {
+  background-color: #61dafb;
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 8px #61dafb66;
 }
