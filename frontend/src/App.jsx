@@ -5,6 +5,8 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Home from "./pages/Home";
 import Tutorials from "./pages/Tutorials";
 import TutorialDetail from "./pages/TutorialDetail";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   const location = useLocation();
@@ -15,6 +17,7 @@ export default function App() {
       <nav>
         <Link to="/">Home</Link>
         <Link to="/tutorials">Tutorials</Link>
+         <Link to="/login">Login</Link>
       </nav>
 
       <TransitionGroup className="transition-group">
@@ -26,11 +29,28 @@ export default function App() {
           unmountOnExit
         >
           <div ref={nodeRef}>
-            <Routes location={location}>
-              <Route path="/" element={<Home />} />
-              <Route path="/tutorials" element={<Tutorials />} />
-              <Route path="/tutorials/:id" element={<TutorialDetail />} />
-            </Routes>
+            <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/tutorials"
+          element={
+            <ProtectedRoute>
+              <Tutorials />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/tutorials/:id"
+          element={
+            <ProtectedRoute>
+              <TutorialDetail />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
           </div>
         </CSSTransition>
       </TransitionGroup>

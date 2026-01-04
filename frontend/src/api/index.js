@@ -1,12 +1,16 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://127.0.0.1:8000";
-
 const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: "http://127.0.0.1:8000",
+});
+
+// Add JWT token to every request if available
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token"); // get JWT from localStorage
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default api;

@@ -4,40 +4,44 @@ import api from "../api";
 
 export default function Tutorials() {
   const [tutorials, setTutorials] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true; // Prevent state update if unmounted
     api.get("/tutorials/")
       .then((res) => {
-        if (isMounted) setTutorials(res.data);
+        setTutorials(res.data);
+        setLoading(false);
       })
-      .catch((err) => console.error(err))
-      .finally(() => {
-        if (isMounted) setLoading(false);
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
       });
-
-    return () => { isMounted = false; }; // cleanup
   }, []);
 
-  if (loading) return <div className="card">Loading tutorials...</div>;
+  if (loading) {
+    return <div className="card">Loading tutorials...</div>;
+  }
+
+  if (tutorials.length === 0) {
+    return <div className="card">No tutorials available</div>;
+  }
 
   return (
     <div>
       <h1>Tutorials</h1>
-      {tutorials.length === 0 ? (
-        <div className="card">No tutorials available</div>
-      ) : (
-        <ul>
-          {tutorials.map((tut) => (
-            <li key={tut.id}>
-              <Link to={`/tutorials/${tut.id}`} className="card">
+      <ul>
+        {tutorials.map((tut) => {
+          // Check if your API returns 'id' or '_id'
+          const tutorialId = tut.id || tut._id;
+          return (
+            <li key={tutorialId}>
+              <Link to={`/tutorials/${tutorialId}`} className="card">
                 {tut.title}
               </Link>
             </li>
-          ))}
-        </ul>
-      )}
+          );
+        })}
+      </ul>
     </div>
   );
 }

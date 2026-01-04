@@ -4,39 +4,63 @@ import api from "../api";
 
 export default function TutorialDetail() {
   const { id } = useParams();
+
   const [tutorial, setTutorial] = useState(null);
+  const [completedLessons, setCompletedLessons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    api.get(`/tutorials/${id}`)
-      .then((res) => {
-        if (isMounted) setTutorial(res.data);
-      })
-      .catch((err) => console.error(err))
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
+    if (!id) return;
 
-    return () => { isMounted = false; };
+    Promise.all([
+      api.get(`/tutorials/${id}`),
+      api.get(`/tutorials/${id}/progress`).catch(() => ({ data: { completedLessons: [] } }))
+    ])
+      .then(([tutorialRes, progressRes]) => {
+        setTutorial(tutorialRes.data);
+        setCompletedLessons(progressRes.data.completedLessons || []);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError("Failed to load tutorial");
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div className="card">Loading tutorial...</div>;
-  if (!tutorial) return <div className="card">Tutorial not found</div>;
+  /* ---------------- UI STATES ---------------- */
+
+  if (loading) {
+    return <div className="card">Loading tutorial...</div>;
+  }
+
+  if (error) {
+    return <div className="card">{error}</div>;
+  }
+
+  if (!tutorial) {
+    return <div className="card">Tutorial not found</div>;
+  }
+
+  /* ---------------- MAIN UI ---------------- */
 
   return (
     <div>
       <h1>{tutorial.title}</h1>
-      <div className="card">{tutorial.description || "No description available"}</div>
+      <p>{tutorial.description}</p>
 
       <h2>Lessons</h2>
+
       {tutorial.lessons && tutorial.lessons.length > 0 ? (
         <ul>
           {tutorial.lessons.map((lesson) => (
             <li key={lesson.id} className="card">
               <strong>{lesson.title}</strong>
-              <p>{lesson.content}</p>
+              {completedLessons.includes(lesson.id) && (
+                <span style={{ color: "#61dafb", marginLeft: "0.5rem" }}>
+                  ✓ Completed
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -44,8 +68,12 @@ export default function TutorialDetail() {
         <div className="card">No lessons available</div>
       )}
 
-      <Link to="/tutorials" className="card" style={{ display: "inline-block", marginTop: "1rem" }}>
-        Back to Tutorials
+      <Link
+        to="/tutorials"
+        className="card"
+        style={{ marginTop: "1rem", display: "inline-block" }}
+      >
+        ← Back to Tutorials
       </Link>
     </div>
   );
