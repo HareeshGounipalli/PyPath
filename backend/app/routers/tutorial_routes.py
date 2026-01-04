@@ -64,3 +64,22 @@ def add_lesson(tutorial_id: int,
     db.commit()
     db.refresh(db_lesson)
     return db_lesson
+
+@router.get("/{tutorial_id}/progress")
+def get_tutorial_progress(
+    tutorial_id: int,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user)  # <- auth required
+):
+    tutorial = db.query(models.Tutorial).filter(models.Tutorial.id == tutorial_id).first()
+    if not tutorial:
+        raise HTTPException(status_code=404, detail="Tutorial not found")
+    
+    progress_records = db.query(models.TutorialProgress).filter_by(
+        student_id=current_user.id,
+        tutorial_id=tutorial_id
+    ).all()
+
+    completed_lessons = [p.lesson_id for p in progress_records] if progress_records else []
+
+    return {"completedLessons": completed_lessons}
