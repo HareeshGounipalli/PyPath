@@ -1,0 +1,107 @@
+/* Navbar container */
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Standard links */
+.navbar a {
+  text-decoration: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.navbar a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Login link style */
+.navbar .login-link {
+  color: #61dafb;
+  border: 1px solid #61dafb;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.navbar .login-link:hover {
+  background: rgba(97, 218, 251, 0.2);
+}
+
+/* Logout button */
+.navbar .logout-button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ff4d4f;
+  background: rgba(255, 77, 79, 0.2);
+  color: #ff4d4f;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.navbar .logout-button:hover {
+  background: rgba(255, 77, 79, 0.3);
+}
+
+/* Logout confirmation dialog overlay */
+.logout-dialog-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Dialog box */
+.logout-dialog {
+  background: #111;
+  padding: 2rem;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+  min-width: 300px;
+}
+
+/* Dialog buttons container */
+.logout-dialog-buttons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+/* Confirm button */
+.logout-dialog-buttons .confirm-button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ff4d4f;
+  background: rgba(255, 77, 79, 0.2);
+  color: #ff4d4f;
+  cursor: pointer;
+}
+
+.logout-dialog-buttons .confirm-button:hover {
+  background: rgba(255, 77, 79, 0.3);
+}
+
+/* Cancel button */
+.logout-dialog-buttons .cancel-button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+}
+
+.logout-dialog-buttons .cancel-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

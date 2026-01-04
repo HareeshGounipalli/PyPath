@@ -1,39 +1,28 @@
-import React, { useRef } from "react";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/Navbar";
+import ProtectedRoute from  "./components/ProtectedRoute";
 import Home from "./pages/Home";
-import Tutorials from "./pages/Tutorials";
-import TutorialDetail from "./pages/TutorialDetail";
-import Login from "./pages/Login";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Auth from "./pages/Auth";
+import Tutorials from  "./pages/Tutorials";
+import TutorialDetail from  "./pages/TutorialDetail";
+import Auth from "./pages/Auth"; // login/register page
+import './index.css';
+import './App.css';
 
 export default function App() {
-  const location = useLocation();
-  const nodeRef = useRef(null); // Needed for React 18 CSSTransition
-
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("token")
+  );
+  
   return (
     <div className="app-container">
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/tutorials">Tutorials</Link>
-         <Link to="/login">Login</Link>
-      </nav>
+      <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
 
-      <TransitionGroup className="transition-group">
-        <CSSTransition
-          key={location.pathname}
-          timeout={400}
-          classNames="page"
-          nodeRef={nodeRef}
-          unmountOnExit
-        >
-          <div ref={nodeRef}>
-            <Routes>
+      <Routes>
         <Route path="/" element={<Home />} />
-         <Route path="/auth" element={<Auth />} />
-        <Route path="/login" element={<Auth />} />
+        <Route path="/login" element={<Auth setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/auth" element={<Auth  setIsAuthenticated={setIsAuthenticated} />} />
 
         <Route
           path="/tutorials"
@@ -52,12 +41,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-       
-
       </Routes>
-          </div>
-        </CSSTransition>
-      </TransitionGroup>
     </div>
   );
 }
