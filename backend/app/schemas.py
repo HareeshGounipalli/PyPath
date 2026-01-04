@@ -27,7 +27,7 @@ class UserOut(UserBase):
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # -------------------- Auth --------------------
 class Token(BaseModel):
@@ -48,7 +48,7 @@ class LessonOut(LessonBase):
     created_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # -------------------- Tutorials --------------------
 class TutorialBase(BaseModel):
@@ -65,4 +65,4 @@ class TutorialOut(TutorialBase):
     lessons: List[LessonOut] = []
 
     class Config:
-        from_attributes = True
+        orm_mode = True
