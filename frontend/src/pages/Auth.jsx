@@ -1,17 +1,28 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import api from "../api";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Auth() {
   const navigate = useNavigate();
-  const [tab, setTab] = useState("login");
+  const location = useLocation();
+
+  // read mode from URL (?mode=register)
+  const query = new URLSearchParams(location.search);
+  const initialMode = query.get("mode") === "register" ? "register" : "login";
+
+  const [mode, setMode] = useState(initialMode);
   const [form, setForm] = useState({
     name: "",
     email: "",
-    password: "",
+    password: ""
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // keep URL in sync when mode changes
+  useEffect(() => {
+    navigate(`/auth?mode=${mode}`, { replace: true });
+  }, [mode, navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,24 +34,19 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      if (tab === "login") {
-        const res = await api.post("/auth/login", {
-          email: form.email,
-          password: form.password,
-        });
-
-        localStorage.setItem("token", res.data.access_token);
-      } else {
-        await api.post("/auth/register", {
-          name: form.name,
-          email: form.email,
-          password: form.password,
-        });
+      if (mode === "register") {
+        await api.post("/auth/register", form);
       }
 
+      const res = await api.post("/auth/login", {
+        email: form.email,
+        password: form.password
+      });
+
+      localStorage.setItem("token", res.data.access_token);
       navigate("/tutorials");
     } catch (err) {
-      setError(err.response?.data?.detail || "Auth failed");
+      setError(err.response?.data?.detail || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -51,27 +57,27 @@ export default function Auth() {
       <div className="auth-card">
         <h1>PyPath</h1>
 
+        {/* Tabs */}
         <div className="auth-tabs">
           <button
-            className={tab === "login" ? "active" : ""}
-            onClick={() => setTab("login")}
+            className={mode === "login" ? "active" : ""}
+            onClick={() => setMode("login")}
           >
             Login
           </button>
           <button
-            className={tab === "register" ? "active" : ""}
-            onClick={() => setTab("register")}
+            className={mode === "register" ? "active" : ""}
+            onClick={() => setMode("register")}
           >
             Register
           </button>
         </div>
 
         <form onSubmit={handleSubmit}>
-          {tab === "register" && (
+          {mode === "register" && (
             <input
-              type="text"
               name="name"
-              placeholder="Name"
+              placeholder="Full Name"
               value={form.name}
               onChange={handleChange}
               required
@@ -79,8 +85,8 @@ export default function Auth() {
           )}
 
           <input
-            type="email"
             name="email"
+            type="email"
             placeholder="Email"
             value={form.email}
             onChange={handleChange}
@@ -88,8 +94,8 @@ export default function Auth() {
           />
 
           <input
-            type="password"
             name="password"
+            type="password"
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
@@ -99,7 +105,11 @@ export default function Auth() {
           {error && <p className="error">{error}</p>}
 
           <button type="submit" disabled={loading}>
-            {loading ? "Please wait..." : tab === "login" ? "Login" : "Register"}
+            {loading
+              ? "Please wait..."
+              : mode === "login"
+              ? "Login"
+              : "Register"}
           </button>
         </form>
       </div>

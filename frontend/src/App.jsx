@@ -32,7 +32,8 @@ export default function App() {
           <div ref={nodeRef}>
             <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+         <Route path="/auth" element={<Auth />} />
+        <Route path="/login" element={<Auth />} />
 
         <Route
           path="/tutorials"
@@ -51,7 +52,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/auth" element={<Auth />} />
+       
 
       </Routes>
           </div>
